@@ -1,0 +1,5 @@
+{
+    "summary_prompt": "INSTRUCTIONS: Make a summary of this text. Include key details and key points. Do not make the summary overly long or use complicated language.\nOUTPUT FORMAT: output your summary as a string directly.\n\nTEXT: {}\n",
+    "vlm_prompt": "INSTRUCTIONS: Detail what you see in the picture. If it is a table, describe what the table is about, the columns and the rows as well as the content of each cell.\nOUTPUT FORMAT: output your description as a string directly.\n",
+    "augmented_generation_prompt": "INSTRUCTIONS: Answer the question based on the key points provided that may be relevant to the question. Ignore any other information in the key points that is not relevant to the question.\nQUESTION: {}\nKEY POINTS:{}\nOUTPUT FORMAT: output your answer as a string directly.\n"
+}
