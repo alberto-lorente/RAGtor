@@ -111,7 +111,7 @@ def query_vector_db(vector_db_path:         str         = VECTOR_DB_PATH,
                     k:                      int         = 10,
                     chunk_type:             str         = "chunk",
                     turn_limit:             int | bool  = False,
-                    mode:                   str         = "raptor"):
+                    mode:                   str         = "ensemble"):
 
     print("Loading vector store.")
     vector_store = load_vector_db(vector_db_path)

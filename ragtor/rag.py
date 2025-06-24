@@ -98,69 +98,98 @@ def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
         print("Loading vector store")
         return vector_store
 
+def raptor_search(vector_store:        FAISS,
+                    query:              str, 
+                    embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
+                    k:                  int = 3) -> List[Document] | List:
+
+    filter_args = {}
+    filter_args["chunking_emb_model"] = embedding_model
+    filter_args["chunk_type"] = "cluster_summary"
+
+    results_cluster = vector_store.similarity_search(
+        query,
+        k=1,
+        filter=filter_args)
+    
+    try:
+        metadata = results_cluster[0].metadata
+        metadata = {k:v for k,v in metadata.items()}
+        metadata["chunk_type"] = "sents"
+
+        results_sents = vector_store.similarity_search(
+        query,
+        k=k,
+        filter=metadata)
+
+    except Exception as e:
+        print("Raptor search not successful")
+        print(e)
+        
+        return []
+    return results_cluster + results_sents
+
+def default_search(vector_store:        FAISS,
+                    query:              str, 
+                    embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
+                    k:                  int = 3,
+                    chunk_type:         str | bool = "sent", 
+                    chunk_source:       str | bool = False)  -> List[Document]:
+    
+    filter_args = {}
+    filter_args["chunking_emb_model"] = embedding_model
+           
+    if chunk_type:
+        filter_args["chunk_type"] = chunk_type
+    if chunk_source:
+        filter_args["chunk_source"] = chunk_source
+    
+    results = vector_store.similarity_search(
+        query,
+        k=k,
+        filter=filter_args)
+    
+    return results
+
 def query_vector_store(vector_store:        FAISS,
                         query:              str, 
                         embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
                         k:                  int = 3, 
-                        chunk_type:         str = "sent", 
+                        chunk_type:         str | bool = "sent", 
                         chunk_source:       str | bool = False,
                         mode:               str = "default") -> List[Document]:
-    filter_args = {}
-    filter_args["chunking_emb_model"] = embedding_model
            
     if mode == "default":
-        if chunk_type:
-            filter_args["chunk_type"] = chunk_type
-        if chunk_source:
-            filter_args["chunk_source"] = chunk_source
-    
-        results = vector_store.similarity_search(
-            query,
-            k=k,
-            filter=filter_args)
-    
+        results = default_search(vector_store,
+                                query,
+                                embedding_model,
+                                k,
+                                chunk_type,
+                                chunk_source)
+        return results
+
     elif mode == "raptor":
+        results = raptor_search(vector_store,
+                                query,
+                                embedding_model,
+                                k)   
 
-        # print("RAPTOR MODE")
+        return results
 
-        filter_args["chunk_type"] = "cluster_summary"
+    elif mode == "ensemble":
+        
+        results_default = default_search(vector_store,
+                                query,
+                                embedding_model,
+                                k,
+                                chunk_type,
+                                chunk_source)
+        results_raptor = raptor_search(vector_store,
+                                query,
+                                embedding_model,
+                                k)    
 
-        results_cluster = vector_store.similarity_search(
-            query,
-            k=1,
-            filter=filter_args)
-
-        # print("RESULTS FOR THE CLUSTER SUMMARY")
-        # print(results_cluster)
-        try:
-            metadata = results_cluster[0].metadata
-            metadata = {k:v for k,v in metadata.items()}
-            metadata["chunk_type"] = "sents"
-
-            results_sents = vector_store.similarity_search(
-                query,
-                k=k,
-                filter=metadata)
-
-            # print("RESULTS FOR THE CLUSTER SENTS")
-            # print(results_sents)
-
-            results = results_cluster + results_sents
-
-        except Exception as e:
-            
-            print("Raptor search not successful")
-            print(e)
-            print("Proceeding with default search")
-            results = query_vector_store(vector_store,
-                                        query,
-                                        embedding_model,
-                                        k,
-                                        chunk_type,
-                                        chunk_source,
-                                        "default")
-
-    return results
+        return results_default + results_raptor
 
 
 
