@@ -3,10 +3,10 @@ from pathlib import Path
 
 ############################MODELS#####################################################
 
-SUMMARY_OLLAMA_MODEL        =       "falcon3:3b"
+SUMMARY_OLLAMA_MODEL        =       "llama3.2:1b"
 VLM_OLLAMA_MODEL            =       "llava-phi3:latest"  
-QUERY_OLLAMA_MODEL          =       "falcon3:3b"
-EMBEDDINGS_OLLAMA_MODEL     =       "falcon3:3b"
+QUERY_OLLAMA_MODEL          =       "llama3.2:1b"
+EMBEDDINGS_OLLAMA_MODEL     =       "llama3.2:1b"
 
 
 ############################CLUSTERING######################################################

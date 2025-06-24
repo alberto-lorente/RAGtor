@@ -15,7 +15,7 @@ from .config import EMBEDDINGS_OLLAMA_MODEL, VECTOR_DB_PATH, PDFS_LOADED_ID_FILE
 
 # docs for faiss indexes https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html
 
-def set_up_RAG_index(embeddings_model_id: str = EMBEDDINGS_OLLAMA_MODEL,
+def set_up_RAG_index(embedding_model_id: str = EMBEDDINGS_OLLAMA_MODEL,
                      vector_db_path: str = VECTOR_DB_PATH,
                      pdfs_loaded_ids_path: str = PDFS_LOADED_ID_FILE_PATH) -> Tuple:
     
@@ -37,7 +37,7 @@ def set_up_RAG_index(embeddings_model_id: str = EMBEDDINGS_OLLAMA_MODEL,
     emd_dims =  len(embds)
     index = faiss.IndexFlatL2(emd_dims) # dimensions of the embeddings
     
-    vector_store = FAISS(embeddings=embeddings, 
+    vector_store = FAISS(embedding_function=embeddings, 
                         index=index, 
                         docstore=InMemoryDocstore(), 
                         index_to_docstore_id={})
@@ -90,7 +90,7 @@ def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
         print("Loading vector store")
         return vector_store
     else:
-        set_up_RAG_index(embeddings_model_id=embeddings_model_id,
+        set_up_RAG_index(embedding_model_id=embeddings_model_id,
                          vector_db_path=vector_db_path,
                          pdfs_loaded_ids_path=pdfs_loaded_ids_path)
         vector_store = load_vector_db(vector_db_path=vector_db_path)
@@ -102,13 +102,13 @@ def query_vector_store(vector_store:        FAISS,
                         query:              str, 
                         embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
                         k:                  int = 3, 
-                        chunk_type:         str = "chunk", 
+                        chunk_type:         str = "sent", 
                         chunk_source:       str | bool = False,
                         mode:               str = "default") -> List[Document]:
-                        
+    filter_args = {}
+    filter_args["chunking_emb_model"] = embedding_model
+           
     if mode == "default":
-        filter_args = {}
-        filter_args["chunking_emb_model"] = embedding_model
         if chunk_type:
             filter_args["chunk_type"] = chunk_type
         if chunk_source:
@@ -120,20 +120,32 @@ def query_vector_store(vector_store:        FAISS,
             filter=filter_args)
     
     elif mode == "raptor":
+
+        # print("RAPTOR MODE")
+
+        filter_args["chunk_type"] = "cluster_summary"
+
         results_cluster = vector_store.similarity_search(
             query,
             k=1,
-            filter={"chunk_type": "cluster_summary"})
-            
-        cluster_id = results_cluster[0].metadata["chunk_source"]
-        doc_id = results_cluster[0].metadata["chunk_doc_source"]
+            filter=filter_args)
 
-        results = vector_store.similarity_search(
+        # print("RESULTS FOR THE CLUSTER SUMMARY")
+        # print(results_cluster)
+
+        metadata = results_cluster[0].metadata
+        metadata = {k:v for k,v in metadata.items()}
+        metadata["chunk_type"] = "sents"
+
+        results_sents = vector_store.similarity_search(
             query,
             k=k,
-            filter={"chunk_type": "sent",
-                    "chunk_source": cluster_id,
-                    "chunk_doc_source": doc_id})
+            filter=metadata)
+
+        # print("RESULTS FOR THE CLUSTER SENTS")
+        # print(results_sents)
+
+        results = results_cluster + results_sents
 
     return results
 

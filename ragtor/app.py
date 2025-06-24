@@ -185,14 +185,18 @@ def main():
     while True:
 
         user_input = input(r"Would you like to \load documents , \chat or \exit ? ")
-        
+        chat_history = []
+
         if user_input == r"\load":
             load_into_vector_db()
+
         elif user_input == r"\chat":
-            query_vector_db()
+            chat_history = query_vector_db()
 
         elif user_input == r"\exit":
+            print("CHAT HISTORY \n", chat_history)
             break
+        
         else:
             print("Invalid input")
 

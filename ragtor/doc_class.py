@@ -96,7 +96,7 @@ def compute_doc_emd_chunks(doc:              Doc,
     # sents         -> if it's true
     # chunks        -> always true
 
-    pdf_id = doc.path.replace(pdf_path + "\\", "")
+    pdf_id = doc.path.replace(str(pdf_path) + "\\", "")
     # print("Processing pdf: ", pdf_id)
     # print("Processing chunks")
     chunks_chunks = [Chunk(content=chunk,

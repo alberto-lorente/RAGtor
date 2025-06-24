@@ -60,5 +60,5 @@ def format_context_string(responses: List[Document]) -> str:
         content = response.page_content
         source = response.metadata["chunk_source"]
         key_points_str += f"\n{str(i+1)}. Source: {source}\nInformation: {content}\n"
-
+    print("KEY POINTS: \n", key_points_str)
     return key_points_str
