@@ -149,9 +149,9 @@ def process_doc_clusters(doc:               Doc,
 #        13
 #        13
     
-    optimal_n, final_clusters, silhouette_scores = get_optimal_n_clusters(embeddings, 
-                                                                        min_n_clusters=2, 
-                                                                        max_n_clusters=12)
+#   optimal_n, final_clusters, silhouette_scores = get_optimal_n_clusters(embeddings, 
+#                                                                        min_n_clusters=2, 
+#                                                                        max_n_clusters=12)
     
     # print(optimal_n)
     # print(type(optimal_n))

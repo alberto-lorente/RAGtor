@@ -101,20 +101,39 @@ def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
 def query_vector_store(vector_store:        FAISS,
                         query:              str, 
                         embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
-                        k:                  int = 2, 
+                        k:                  int = 3, 
                         chunk_type:         str = "chunk", 
-                        chunk_source:       str | bool = False) -> List[Document]:
-    filter_args = {}
-    filter_args["chunking_emb_model"] = embedding_model
-    if chunk_type:
-        filter_args["chunk_type"] = chunk_type
-    if chunk_source:
-        filter_args["chunk_source"] = chunk_source
+                        chunk_source:       str | bool = False,
+                        mode:               str = "default") -> List[Document]:
+                        
+    if mode == "default":
+        filter_args = {}
+        filter_args["chunking_emb_model"] = embedding_model
+        if chunk_type:
+            filter_args["chunk_type"] = chunk_type
+        if chunk_source:
+            filter_args["chunk_source"] = chunk_source
     
-    results = vector_store.similarity_search(
-        query,
-        k=k,
-        filter=filter_args)
+        results = vector_store.similarity_search(
+            query,
+            k=k,
+            filter=filter_args)
+    
+    elif mode == "raptor":
+        results_cluster = vector_store.similarity_search(
+            query,
+            k=1,
+            filter={"chunk_type": "cluster_summary"})
+            
+        cluster_id = results_cluster[0].metadata["chunk_source"]
+        doc_id = results_cluster[0].metadata["chunk_doc_source"]
+
+        results = vector_store.similarity_search(
+            query,
+            k=k,
+            filter={"chunk_type": "sent",
+                    "chunk_source": cluster_id,
+                    "chunk_doc_source": doc_id})
 
     return results
 

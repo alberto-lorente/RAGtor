@@ -8,14 +8,15 @@ from .config import EMBEDDINGS_OLLAMA_MODEL
 class Chunk(BaseModel):
 
     model_config                        = ConfigDict(arbitrary_types_allowed=True) # ALLOW FOR TORCH.TENSOR TYPE
-    chunk_source:       Optional[str]   = "Unknown"
+    chunk_doc_source:   Optional[str]   = "Unknown"
     content:            str 
-    chunk_type:         str             = "text"
+    chunk_type:         str             = "chunk"
+    chunk_source:       Optional[str]   = "Unknown" # source within the document, which cluster does it belong to
     
     length_type:        Optional[str]   = "naive"
     chunking_emb_model: str             = EMBEDDINGS_OLLAMA_MODEL
 
-    # assert chunk_type in ["summary", "paragraph", "text", "image_description", "table_description", "cluster"]
+    assert chunk_type in ["cluster_summary", "cluster_text", "paragraph", "chunk", "sent"]
     
     @computed_field
     @property
@@ -37,7 +38,7 @@ class Chunk(BaseModel):
     def chunk_embeddings(self) -> torch.Tensor:    
             
         chunk_embeddings = compute_embeddings(  text        = self.content, 
-                                                model  = self.chunking_emb_model)            
+                                                model       = self.chunking_emb_model)            
         return chunk_embeddings
 #############################################################################################33    
 

@@ -79,9 +79,13 @@ def load_into_vector_db(pdfs_files_path:        str     = PDFS_PATH,
     #############LOADING INTO VECTOR DB#####################
 
     vector_store = set_up_rag_db(vector_db_path) # if i want to load one specifically, i can pass the path of the db
-    metadatas = [{"chunk_source": chunk.chunk_source, 
-                "chunk_type": chunk.chunk_type,
-                "chunking_emb_model": chunk.chunking_emb_model}
+    metadatas = [{
+
+        "chunk_doc_source": chunk.chunk_doc_source,
+        "chunk_source": chunk.chunk_source, 
+        "chunk_type": chunk.chunk_type,
+        "chunking_emb_model": chunk.chunking_emb_model}
+
                 for chunk in pdf_chunks]
 
     iter_text_embs = [(chunk.content, chunk.chunk_embeddings[0]) for chunk in pdf_chunks]
@@ -106,7 +110,8 @@ def query_vector_db(vector_db_path:         str         = VECTOR_DB_PATH,
                     prompt_template:        str         = PROMPTS["augmented_generation_prompt"],
                     k:                      int         = 10,
                     chunk_type:             str         = "chunk",
-                    turn_limit:             int | bool  = False):
+                    turn_limit:             int | bool  = False,
+                    mode:                   str         = "raptor"):
 
     print("Loading vector store.")
     vector_store = load_vector_db(vector_db_path)
@@ -126,7 +131,8 @@ def query_vector_db(vector_db_path:         str         = VECTOR_DB_PATH,
                                     query=query,
                                     embedding_model=chunking_emb_model,
                                     k=k,
-                                    chunk_type=chunk_type)
+                                    chunk_type=chunk_type,
+                                    mode=mode)
         
         key_points_str = format_context_string(search)
         rag_prompt = prompt_template.format(query, key_points_str)

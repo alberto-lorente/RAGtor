@@ -84,7 +84,7 @@ class Doc(BaseModel):
         
         return chunks
 
-def compute_doc_emd_chunks(doc:                 Doc,
+def compute_doc_emd_chunks(doc:              Doc,
                         pdf_path:            str=PDFS_PATH,
                         length_type:         str="naive",
                         chunking_emb_model:  str=EMBEDDINGS_OLLAMA_MODEL) -> List[Chunk]:
@@ -100,7 +100,7 @@ def compute_doc_emd_chunks(doc:                 Doc,
     # print("Processing pdf: ", pdf_id)
     # print("Processing chunks")
     chunks_chunks = [Chunk(content=chunk,
-                chunk_source=pdf_id,
+                chunk_doc_source=pdf_id,
                 chunk_type="chunk",
                 length_type=length_type,
                 chunking_emb_model=chunking_emb_model) 
@@ -108,7 +108,7 @@ def compute_doc_emd_chunks(doc:                 Doc,
 
     # print("Processing sentences")
     chunks_sents = [Chunk(content=sent,
-                chunk_source=pdf_id,
+                chunk_doc_source=pdf_id,
                 chunk_type="sent",
                 length_type=length_type,
                 chunking_emb_model=chunking_emb_model) 
@@ -122,28 +122,42 @@ def compute_doc_emd_chunks(doc:                 Doc,
         # pp(doc.clusters)
         # pp(doc.model_dump())
         chunks_cluster_summaries = [Chunk(content=cluster_data["summary"],
-                chunk_source=pdf_id,
-                chunk_type="{}_summary".format(cluster_id),
+                chunk_doc_source=pdf_id,
+                chunk_type="cluster_summary",
+                chunk_source=cluster_id,
                 length_type=length_type,
                 chunking_emb_model=chunking_emb_model) 
             for cluster_id, cluster_data in doc.clusters.items()]
 
         # print("Processing cluster texts")
         chunks_cluster_texts = [Chunk(content=cluster_data["txt"],
-                chunk_source=pdf_id,
-                chunk_type="{}_text".format(cluster_id),
+                chunk_doc_source=pdf_id,
+                chunk_type="cluster_text",
+                chunk_source=cluster_id,
                 length_type=length_type,
                 chunking_emb_model=chunking_emb_model) 
             for cluster_id, cluster_data in doc.clusters.items()]
 
-        chunks += chunks_cluster_summaries + chunks_cluster_texts
+        chunks_cluster_sents = []
+        for cluster_id, cluster_data in doc.clusters.items():
+            for cluster_sent in cluster_data["sents"]:
+                cluster_sent_chunk = Chunk(content=cluster_sent,
+                                            chunk_doc_source=pdf_id,
+                                            chunk_type="sents",
+                                            chunk_source=cluster_id, # I will filter the id so no need to do a chunk_type = cluster_sents
+                                            length_type=length_type,
+                                            chunking_emb_model=chunking_emb_model)
+                                            
+                chunks_cluster_sents.append(cluster_sent_chunk)
+
+        chunks += chunks_cluster_summaries + chunks_cluster_texts + chunks_cluster_sents
 
     # if these are images and NOT image descriptions, would need a MM embbedding model
 
     # if doc.compute_images:
 
     #     chunks_images = [Chunk(content=image,
-    #                         chunk_source=pdf_id,
+    #                         doc_=pdf_id,
     #                         chunk_type="image",
     #                         length_type="naive",
     #                         chunking_emb_model=EMBEDDINGS_OLLAMA_MODEL) 
