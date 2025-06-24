@@ -132,20 +132,33 @@ def query_vector_store(vector_store:        FAISS,
 
         # print("RESULTS FOR THE CLUSTER SUMMARY")
         # print(results_cluster)
+        try:
+            metadata = results_cluster[0].metadata
+            metadata = {k:v for k,v in metadata.items()}
+            metadata["chunk_type"] = "sents"
 
-        metadata = results_cluster[0].metadata
-        metadata = {k:v for k,v in metadata.items()}
-        metadata["chunk_type"] = "sents"
+            results_sents = vector_store.similarity_search(
+                query,
+                k=k,
+                filter=metadata)
 
-        results_sents = vector_store.similarity_search(
-            query,
-            k=k,
-            filter=metadata)
+            # print("RESULTS FOR THE CLUSTER SENTS")
+            # print(results_sents)
 
-        # print("RESULTS FOR THE CLUSTER SENTS")
-        # print(results_sents)
+            results = results_cluster + results_sents
 
-        results = results_cluster + results_sents
+        except Exception as e:
+            
+            print("Raptor search not successful")
+            print(e)
+            print("Proceeding with default search")
+            results = query_vector_store(vector_store,
+                                        query,
+                                        embedding_model,
+                                        k,
+                                        chunk_type,
+                                        chunk_source,
+                                        "default")
 
     return results
 
