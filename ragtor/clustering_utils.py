@@ -83,6 +83,7 @@ def get_optimal_n_clusters( embeddings:     torch.Tensor,
     return optimal_n, final_clusters, silhouette_scores
 
 def process_doc_clusters(doc:               Doc,
+                        text_splitter:      RecursiveCharacterTextSplitter,
                         min_n_clusters:     int=4,
                         max_n_clusters:     int=9,
                         summarize_cluster:  bool=True, 
@@ -112,6 +113,7 @@ def process_doc_clusters(doc:               Doc,
     
     for cluster_str in clusters.keys():
         clusters[cluster_str]["txt"] = " ".join(clusters[cluster_str]["sents"])
+        clusters[cluster_str]["chunks"] = text_splitter.split_text(clusters[cluster_str]["txt"])
     # print("Clusters sentences joined")
     
         if summarize_cluster:

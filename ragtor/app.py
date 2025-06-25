@@ -62,6 +62,7 @@ def load_into_vector_db(pdfs_files_path:        str     = PDFS_PATH,
                 for pdf_path in unprocessed_pdfs_paths]
 
     pdf_docs = [process_doc_clusters(doc,
+                                    text_splitter=text_splitter,
                                     min_n_clusters=min_n_clusters,
                                     summarize_cluster=summarize_cluster,
                                     summary_model=summary_model,
@@ -88,7 +89,8 @@ def load_into_vector_db(pdfs_files_path:        str     = PDFS_PATH,
 
                 for chunk in pdf_chunks]
 
-    iter_text_embs = [(chunk.content, chunk.chunk_embeddings[0]) for chunk in pdf_chunks]
+    # make sure the chunk.chunk_embeddings' shape is (emb_dims) and not (batch_size x emb_dims)
+    iter_text_embs = [(chunk.content, chunk.chunk_embeddings) for chunk in pdf_chunks]
 
     print("Adding doc chunks into the vector store")
     vector_store.add_embeddings(text_embeddings=iter_text_embs, metadatas=metadatas)
@@ -129,7 +131,7 @@ def query_vector_db(vector_db_path:         str         = VECTOR_DB_PATH,
         print("----Searching for relevant chunks.----")
         search = query_vector_store(vector_store=vector_store,
                                     query=query,
-                                    embedding_model=chunking_emb_model,
+                                    embeddings_model=chunking_emb_model,
                                     k=k,
                                     chunk_type=chunk_type,
                                     mode=mode)

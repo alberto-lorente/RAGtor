@@ -6,7 +6,7 @@ from pathlib import Path
 SUMMARY_OLLAMA_MODEL        =       "llama3.2:1b"
 VLM_OLLAMA_MODEL            =       "llava-phi3:latest"  
 QUERY_OLLAMA_MODEL          =       "llama3.2:1b"
-EMBEDDINGS_MODEL            =       "Qwen/Qwen3-Embedding-0.6B"
+EMBEDDINGS_MODEL            =       "Snowflake/snowflake-arctic-embed-s"
 
 
 ############################CLUSTERING######################################################

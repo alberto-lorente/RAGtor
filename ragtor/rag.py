@@ -33,9 +33,7 @@ def set_up_RAG_index(embedding_model_id: str = EMBEDDINGS_MODEL,
             print(path)
         return db_found
     
-    embeddings = HuggingFaceEmbeddings(model_name=embedding_model_id,
-                                       model_kwargs={"attn_implementation": "flash_attention_2", 
-                                                     "device_map": "auto"})
+    embeddings = HuggingFaceEmbeddings(model_name=embedding_model_id)
     
     embds = embeddings.embed_query("Hello Word!") # embed docs if multiple text but since i only want the dimensions of the embddings, we can just pass a short string
     emd_dims =  len(embds)
@@ -74,9 +72,7 @@ def check_if_db_exists(vector_db_path: str = VECTOR_DB_PATH) -> bool | List[str]
 def load_vector_db(vector_db_path:      str = VECTOR_DB_PATH,
                    embeddings_model_id: str = EMBEDDINGS_MODEL):
     
-    embeddings = HuggingFaceEmbeddings(model_name=embedding_model_id,
-                                       model_kwargs={"attn_implementation": "flash_attention_2", 
-                                                     "device_map": "auto"})
+    embeddings = HuggingFaceEmbeddings(model_name=embeddings_model_id)
 
     vector_store = FAISS.load_local(vector_db_path , embeddings, allow_dangerous_deserialization=True)
     
@@ -107,11 +103,10 @@ def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
 
 def raptor_search(vector_store:        FAISS,
                     query:              str, 
-                    embedding_model:    str = EMBEDDINGS_MODEL, 
+                    embeddings_model:    str = EMBEDDINGS_MODEL, 
                     k:                  int = 3) -> List[Document] | List:
 
     filter_args = {}
-    filter_args["chunking_emb_model"] = embedding_model
     filter_args["chunk_type"] = "cluster_summary"
 
     results_cluster = vector_store.similarity_search(
@@ -138,13 +133,12 @@ def raptor_search(vector_store:        FAISS,
 
 def default_search(vector_store:        FAISS,
                     query:              str, 
-                    embedding_model:    str = EMBEDDINGS_MODEL, 
+                    embeddings_model:   str = EMBEDDINGS_MODEL, 
                     k:                  int = 3,
                     chunk_type:         str | bool = "sent", 
                     chunk_source:       str | bool = False)  -> List[Document]:
     
     filter_args = {}
-    filter_args["chunking_emb_model"] = embedding_model
            
     if chunk_type:
         filter_args["chunk_type"] = chunk_type
@@ -160,7 +154,7 @@ def default_search(vector_store:        FAISS,
 
 def query_vector_store(vector_store:        FAISS,
                         query:              str, 
-                        embedding_model:    str = EMBEDDINGS_MODEL, 
+                        embeddings_model:   str = EMBEDDINGS_MODEL, 
                         k:                  int = 3, 
                         chunk_type:         str | bool = "sent", 
                         chunk_source:       str | bool = False,
@@ -169,7 +163,7 @@ def query_vector_store(vector_store:        FAISS,
     if mode == "default":
         results = default_search(vector_store,
                                 query,
-                                embedding_model,
+                                embeddings_model,
                                 k,
                                 chunk_type,
                                 chunk_source)
@@ -178,7 +172,7 @@ def query_vector_store(vector_store:        FAISS,
     elif mode == "raptor":
         results = raptor_search(vector_store,
                                 query,
-                                embedding_model,
+                                embeddings_model,
                                 k)   
 
         return results
@@ -187,13 +181,13 @@ def query_vector_store(vector_store:        FAISS,
         
         results_default = default_search(vector_store,
                                 query,
-                                embedding_model,
+                                embeddings_model,
                                 k,
                                 chunk_type,
                                 chunk_source)
         results_raptor = raptor_search(vector_store,
                                 query,
-                                embedding_model,
+                                embeddings_model,
                                 k)    
 
         return results_default + results_raptor

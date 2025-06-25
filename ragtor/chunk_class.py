@@ -16,7 +16,7 @@ class Chunk(BaseModel):
     length_type:        Optional[str]   = "naive"
     chunking_emb_model: str             = EMBEDDINGS_MODEL
 
-    assert chunk_type in ["cluster_summary", "cluster_text", "paragraph", "chunk", "sent"]
+    assert chunk_type in ["cluster_summary", "cluster_text", "paragraph", "chunk", "sent", "sents"]
     
     @computed_field
     @property
@@ -38,7 +38,7 @@ class Chunk(BaseModel):
     def chunk_embeddings(self) -> torch.Tensor:    
             
         chunk_embeddings = compute_embeddings(  text        = self.content, 
-                                                model       = self.chunking_emb_model)            
+                                                embeddings_model= self.chunking_emb_model)            
         return chunk_embeddings
 #############################################################################################33    
 
