@@ -3,7 +3,7 @@ from typing import Optional, List, Tuple
 
 import torch
 from .encoding_utils import compute_embeddings, compute_token_length
-from .config import EMBEDDINGS_OLLAMA_MODEL
+from .config import EMBEDDINGS_MODEL
 
 class Chunk(BaseModel):
 
@@ -14,7 +14,7 @@ class Chunk(BaseModel):
     chunk_source:       Optional[str]   = "Unknown" # source within the document, which cluster does it belong to
     
     length_type:        Optional[str]   = "naive"
-    chunking_emb_model: str             = EMBEDDINGS_OLLAMA_MODEL
+    chunking_emb_model: str             = EMBEDDINGS_MODEL
 
     assert chunk_type in ["cluster_summary", "cluster_text", "paragraph", "chunk", "sent"]
     

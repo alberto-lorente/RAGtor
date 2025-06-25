@@ -8,7 +8,7 @@ from .chunk_class import Chunk
 from .rag import set_up_rag_db, load_vector_db, query_vector_store
 from .generation import format_context_string
 
-from .config import PDFS_PATH, PDFS_LOADED_ID_FILE_PATH, VECTOR_DB_PATH, EMBEDDINGS_OLLAMA_MODEL, PROMPTS, SUMMARY_OLLAMA_MODEL, QUERY_OLLAMA_MODEL
+from .config import PDFS_PATH, PDFS_LOADED_ID_FILE_PATH, VECTOR_DB_PATH, EMBEDDINGS_MODEL, PROMPTS, SUMMARY_OLLAMA_MODEL, QUERY_OLLAMA_MODEL
 
 import ollama
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -21,7 +21,7 @@ def load_into_vector_db(pdfs_files_path:        str     = PDFS_PATH,
                         chunk_size:             int     = 800,
                         chunk_overlap:          int     = 52,
                         length_type:            str     = "naive",
-                        chunking_emb_model:     str     = EMBEDDINGS_OLLAMA_MODEL,
+                        chunking_emb_model:     str     = EMBEDDINGS_MODEL,
                         compute_image:          bool    = False,
                         min_n_clusters:         int     = 3,
                         summarize_cluster:      bool    = True,
@@ -105,7 +105,7 @@ def load_into_vector_db(pdfs_files_path:        str     = PDFS_PATH,
 ######################################QUERYING#####################
 
 def query_vector_db(vector_db_path:         str         = VECTOR_DB_PATH,
-                    chunking_emb_model:     str         = EMBEDDINGS_OLLAMA_MODEL,
+                    chunking_emb_model:     str         = EMBEDDINGS_MODEL,
                     query_ollama_model:     str         = QUERY_OLLAMA_MODEL,
                     prompt_template:        str         = PROMPTS["augmented_generation_prompt"],
                     k:                      int         = 10,

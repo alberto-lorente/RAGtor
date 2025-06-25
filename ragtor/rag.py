@@ -2,7 +2,8 @@ import os
 import json
 from typing import List, Dict, Tuple
 
-from langchain_ollama import OllamaEmbeddings
+# from langchain_ollama import OllamaEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 
 import faiss
@@ -11,11 +12,11 @@ from langchain_community.vectorstores import FAISS
 
 from pprint import pprint
 
-from .config import EMBEDDINGS_OLLAMA_MODEL, VECTOR_DB_PATH, PDFS_LOADED_ID_FILE_PATH
+from .config import EMBEDDINGS_MODEL, VECTOR_DB_PATH, PDFS_LOADED_ID_FILE_PATH
 
 # docs for faiss indexes https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html
 
-def set_up_RAG_index(embedding_model_id: str = EMBEDDINGS_OLLAMA_MODEL,
+def set_up_RAG_index(embedding_model_id: str = EMBEDDINGS_MODEL,
                      vector_db_path: str = VECTOR_DB_PATH,
                      pdfs_loaded_ids_path: str = PDFS_LOADED_ID_FILE_PATH) -> Tuple:
     
@@ -32,7 +33,10 @@ def set_up_RAG_index(embedding_model_id: str = EMBEDDINGS_OLLAMA_MODEL,
             print(path)
         return db_found
     
-    embeddings = OllamaEmbeddings(model=embedding_model_id)
+    embeddings = HuggingFaceEmbeddings(model_name=embedding_model_id,
+                                       model_kwargs={"attn_implementation": "flash_attention_2", 
+                                                     "device_map": "auto"})
+    
     embds = embeddings.embed_query("Hello Word!") # embed docs if multiple text but since i only want the dimensions of the embddings, we can just pass a short string
     emd_dims =  len(embds)
     index = faiss.IndexFlatL2(emd_dims) # dimensions of the embeddings
@@ -68,15 +72,18 @@ def check_if_db_exists(vector_db_path: str = VECTOR_DB_PATH) -> bool | List[str]
         return False
     
 def load_vector_db(vector_db_path:      str = VECTOR_DB_PATH,
-                   embeddings_model_id: str = EMBEDDINGS_OLLAMA_MODEL):
+                   embeddings_model_id: str = EMBEDDINGS_MODEL):
     
-    embeddings = OllamaEmbeddings(model=embeddings_model_id)
+    embeddings = HuggingFaceEmbeddings(model_name=embedding_model_id,
+                                       model_kwargs={"attn_implementation": "flash_attention_2", 
+                                                     "device_map": "auto"})
+
     vector_store = FAISS.load_local(vector_db_path , embeddings, allow_dangerous_deserialization=True)
     
     return vector_store
 
 def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
-                  embeddings_model_id: str = EMBEDDINGS_OLLAMA_MODEL,
+                  embeddings_model_id: str = EMBEDDINGS_MODEL,
                   pdfs_loaded_ids_path: str = PDFS_LOADED_ID_FILE_PATH):
     
     """Checks if the Vector DB exists. 
@@ -100,7 +107,7 @@ def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
 
 def raptor_search(vector_store:        FAISS,
                     query:              str, 
-                    embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
+                    embedding_model:    str = EMBEDDINGS_MODEL, 
                     k:                  int = 3) -> List[Document] | List:
 
     filter_args = {}
@@ -131,7 +138,7 @@ def raptor_search(vector_store:        FAISS,
 
 def default_search(vector_store:        FAISS,
                     query:              str, 
-                    embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
+                    embedding_model:    str = EMBEDDINGS_MODEL, 
                     k:                  int = 3,
                     chunk_type:         str | bool = "sent", 
                     chunk_source:       str | bool = False)  -> List[Document]:
@@ -153,7 +160,7 @@ def default_search(vector_store:        FAISS,
 
 def query_vector_store(vector_store:        FAISS,
                         query:              str, 
-                        embedding_model:    str = EMBEDDINGS_OLLAMA_MODEL, 
+                        embedding_model:    str = EMBEDDINGS_MODEL, 
                         k:                  int = 3, 
                         chunk_type:         str | bool = "sent", 
                         chunk_source:       str | bool = False,

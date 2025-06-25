@@ -16,7 +16,7 @@ import ollama
 import nltk
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from .config import VLM_OLLAMA_MODEL, EMBEDDINGS_OLLAMA_MODEL, PDFS_PATH
+from .config import VLM_OLLAMA_MODEL, EMBEDDINGS_MODEL, PDFS_PATH
 
 class Doc(BaseModel):
     
@@ -87,7 +87,7 @@ class Doc(BaseModel):
 def compute_doc_emd_chunks(doc:              Doc,
                         pdf_path:            str=PDFS_PATH,
                         length_type:         str="naive",
-                        chunking_emb_model:  str=EMBEDDINGS_OLLAMA_MODEL) -> List[Chunk]:
+                        chunking_emb_model:  str=EMBEDDINGS_MODEL) -> List[Chunk]:
 
 
     # clusters      -> if it's true

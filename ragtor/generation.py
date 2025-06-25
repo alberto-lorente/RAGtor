@@ -2,7 +2,7 @@ from typing import List, Tuple, Dict
 
 import ollama
 from langchain_core.documents import Document
-from .config import SUMMARY_OLLAMA_MODEL, QUERY_OLLAMA_MODEL, EMBEDDINGS_OLLAMA_MODEL, VLM_OLLAMA_MODEL
+from .config import SUMMARY_OLLAMA_MODEL, QUERY_OLLAMA_MODEL, VLM_OLLAMA_MODEL
 
 
 

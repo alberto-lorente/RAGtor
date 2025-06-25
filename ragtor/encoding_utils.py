@@ -1,5 +1,6 @@
 import ollama 
 import torch
+from sentence_transformers import SentenceTransformer
 
 import re
 import nltk
@@ -12,7 +13,7 @@ import base64
 
 from typing import Tuple
 
-from .config import EMBEDDINGS_OLLAMA_MODEL, PDFS_PATH
+from .config import EMBEDDINGS_MODEL, PDFS_PATH
 
 
 def encode_image_to_bytes(image): ############## ADD THE TYPE
@@ -25,9 +26,13 @@ def encode_image_to_bytes(image): ############## ADD THE TYPE
 
 
 def compute_embeddings( text:       str, 
-                        model:      str = EMBEDDINGS_OLLAMA_MODEL) -> torch.Tensor:
-       
-    embeddings = ollama.embed(model=model, input=text).embeddings
+                        model:      str = EMBEDDINGS_MODEL) -> torch.Tensor:
+
+    model = SentenceTransformer(model,
+                                model_kwargs={"attn_implementation": "flash_attention_2", "device_map": "auto"},
+                                tokenizer_kwargs={"padding_side": "left"})
+    embeddings = model.encode(text)
+
     # print(embeddings)
     torch_embds = torch.Tensor(embeddings)
     # [batch_size, embed_dim]

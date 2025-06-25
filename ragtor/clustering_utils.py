@@ -4,7 +4,7 @@ from typing import Optional, List, Tuple
 import torch
 import ollama
 
-from .config import SUMMARY_OLLAMA_MODEL, PROMPTS
+from .config import SUMMARY_OLLAMA_MODEL, PROMPTS, EMBEDDINGS_MODEL
 
 from .encoding_utils import compute_embeddings, compute_token_length
 from .generation import ollama_generate_text
@@ -86,6 +86,7 @@ def process_doc_clusters(doc:               Doc,
                         min_n_clusters:     int=4,
                         max_n_clusters:     int=9,
                         summarize_cluster:  bool=True, 
+                        embedding_model:    str=EMBEDDINGS_MODEL,
                         summary_model:      str=SUMMARY_OLLAMA_MODEL,
                         summary_prompt:     str=PROMPTS["summary_prompt"]) -> Doc:
 
@@ -97,7 +98,7 @@ def process_doc_clusters(doc:               Doc,
     # print("Number of max clusters: ", max_n_clusters)
     # print("Number of min clusters: ", min_n_clusters)
     # print("Computing embeddings")
-    embeddings      = compute_embeddings(doc.sents)
+    embeddings      = compute_embeddings(doc.sents, embedding_model)
     optimal_n, final_clusters, silhouette_scores = get_optimal_n_clusters(embeddings, 
                                                                         min_n_clusters=min_n_clusters, 
                                                                         max_n_clusters=max_n_clusters)

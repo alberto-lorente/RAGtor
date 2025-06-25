@@ -27,7 +27,9 @@ dependencies = [
 "pydantic==2.11.7",
 "scikit-learn==1.7.0",
 "torch",
-"wand==0.6.13"]
+"wand==0.6.13",
+"sentence-transformers",
+"langchain-huggingface"]
 
 [project.scripts]
 ragtor = "ragtor.app:main"
