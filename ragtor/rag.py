@@ -117,7 +117,7 @@ def raptor_search(vector_store:        FAISS,
     try:
         metadata = results_cluster[0].metadata
         metadata = {k:v for k,v in metadata.items()}
-        metadata["chunk_type"] = "sents"
+        metadata["chunk_type"] = "chunk"
 
         results_sents = vector_store.similarity_search(
         query,

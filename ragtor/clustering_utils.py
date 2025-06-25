@@ -3,6 +3,7 @@ from typing import Optional, List, Tuple
 
 import torch
 import ollama
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from .config import SUMMARY_OLLAMA_MODEL, PROMPTS, EMBEDDINGS_MODEL
 
