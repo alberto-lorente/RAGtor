@@ -13,6 +13,9 @@ from .config import PDFS_PATH, PDFS_LOADED_ID_FILE_PATH, VECTOR_DB_PATH, EMBEDDI
 import ollama
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+import warnings
+
+warnings.filterwarnings('ignore') # ignoring warnings for the app runing side
 
 
 def load_into_vector_db(pdfs_files_path:        str     = PDFS_PATH,
