@@ -1,15 +1,25 @@
 ## Repository Overview
 
 RAGtor/
+
 ├── data/
+
 │   ├── db/
+
 │   ├── pdf_to_images/
+
 │   ├── pdfs/
+
 │   ├── prompts/
+
 ├── Literature/
+
 ├── poppler-24.08.0/
+
 ├── ragtor/
+
 ├── pyproject.toml
+
 └── README.md
 
 - The data folder contains the default path for the vector db, the default path where the app will look for new pdfs as well as the default prompts for querying.
@@ -45,8 +55,11 @@ Models:
 In order to change the models used or the paths of the vector db or pdf folder, just go to 
 
 RAGtor/
+
 ├── ragtor/
+
 │   ├── config.py
+
 
 and modify the constants.
 
