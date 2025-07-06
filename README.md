@@ -2,38 +2,14 @@
 
 ```
 RAGtor/
-├── .gitignore
-├── additional-requirements.txt
-├── checking_vector_db_things.ipynb
 ├── data/
 │   ├── db/
-│   ├── pdf_to_images/
 │   ├── pdfs/
 │   └── prompts/
-│       ├── example_markdown.md
-│       ├── example_md_to_text.txt
-│       ├── example_table_image.png
-│       ├── example.pdf
-│       └── loaded_pdfs_id.json
-├── Literature/
-├── OVERVIEW QUERY.png
-├── poppler-24.08.0/
-├── processing and loading workflow.ipynb
-├── pyproject.toml
-├── querying workflow.ipynb
 ├── ragtor/
-│   ├── __init__.py
-│   ├── app.py
-│   ├── chunk_class.py
-│   ├── clustering_tutils.py
-│   ├── config.py
-│   ├── doc_class.py
-│   ├── encoding_tutils.py
-│   ├── experiments.ipynb
-│   ├── generation.py
-│   ├── rag.py
-│   ├── reusable.py
-│   └── to do's.txt
+├── Literature/
+├── poppler-24.08.0/
+├── pyproject.toml
 └── README.md
 ```
 
@@ -69,13 +45,11 @@ Models:
 
 In order to change the models used or the paths of the vector db or pdf folder, just go to 
 
+```
 RAGtor/
-
-   ├── ragtor/
-
-   │----├── config.py
-
-
+├── ragtor/
+│   └── config.py/
+```
 and modify the constants.
 
 
