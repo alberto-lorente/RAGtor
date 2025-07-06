@@ -2,23 +2,23 @@
 
 RAGtor/
 
-├── data/
+   ├── data/
 
-│         ├── db/
+   │         ├── db/
 
-│         ├── pdfs/
+   │         ├── pdfs/
 
-│         ├── prompts/
+   │         ├── prompts/
 
-├── Literature/
+   ├── Literature/
 
-├── poppler-24.08.0/
+   ├── poppler-24.08.0/
 
-├── ragtor/
+   ├── ragtor/
 
-├── pyproject.toml
+   ├── pyproject.toml
 
-└── README.md
+   └── README.md
 
 - The data folder contains the default path for the vector db, the default path where the app will look for new pdfs as well as the default prompts for querying.
 - Within the Liretature folder you will find the RAPTOR paper which this repo is based on.
@@ -54,9 +54,9 @@ In order to change the models used or the paths of the vector db or pdf folder, 
 
 RAGtor/
 
-├── ragtor/
+   ├── ragtor/
 
-│         ├── config.py
+   │         ├── config.py
 
 
 and modify the constants.
