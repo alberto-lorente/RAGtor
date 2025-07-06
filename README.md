@@ -1,5 +1,21 @@
 ## Repository Overview
 
+RAGtor/
+├── data/
+│   ├── db/
+│   ├── pdf_to_images/
+│   ├── pdfs/
+│   ├── prompts/
+├── Literature/
+├── poppler-24.08.0/
+├── ragtor/
+├── pyproject.toml
+└── README.md
+
+- The data folder contains the default path for the vector db, the default path where the app will look for new pdfs as well as the default prompts for querying.
+- Within the Liretature folder you will find the RAPTOR paper which this repo is based on.
+- FInally, the ragtor folder includes the package which deals with the classes, functions, utils and logic for the ragtor cli.
+
 ## Raptor Pipeline Flow
 
 1. **Pre-processing**
@@ -26,6 +42,14 @@ Models:
    - RETRIEVAL_OLLAMA_MODEL      =       "llama3.2:1b"
    - EMBEDDINGS_MODEL            =       "Snowflake/snowflake-arctic-embed-s"
 
+In order to change the models used or the paths of the vector db or pdf folder, just go to 
+
+RAGtor/
+├── ragtor/
+│   ├── config.py
+
+and modify the constants.
+
 
 ### Requirements
 
@@ -38,3 +62,7 @@ pip install -e .
 ```
 
 Then the app will be accessible from the terminal via the command  **ragtor** . 
+
+## Under Costruction
+ []
+
