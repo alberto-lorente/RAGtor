@@ -14,17 +14,13 @@
    - Generates summaries for the clusters
 
 3. **RAG Pipeline**
-Diagram of the RAG query flow:
-![OVERVIEW QUERY](https://github.com/user-attachments/assets/a559f7e0-62db-455f-859f-86b27a53eb10)
-
 - At a first step, we query the cluster summaries.
 - Then we query those chunks which belonged to the cluster returned in the previous step as well as the tables.
 - This information is formated together for the augmented generation.
 
 ## Current Configuration
 
-- Models:
-- 
+Models:
    - SUMMARY_OLLAMA_MODEL        =       "llama3.2:1b"
    - VLM_OLLAMA_MODEL            =       "llava-phi3:latest"  
    - RETRIEVAL_OLLAMA_MODEL          =       "llama3.2:1b"
@@ -33,6 +29,7 @@ Diagram of the RAG query flow:
 
 ### Requirements
 
+In order for the app to run you should have Ollama installed.
 
 ### Installation:
 Navigate to the repository directory and
