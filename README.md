@@ -4,11 +4,11 @@ RAGtor/
 
 ├── data/
 
-│      ├── db/
+│         ├── db/
 
-│      ├── pdfs/
+│         ├── pdfs/
 
-│      ├── prompts/
+│         ├── prompts/
 
 ├── Literature/
 
@@ -56,7 +56,7 @@ RAGtor/
 
 ├── ragtor/
 
-│      ├── config.py
+│         ├── config.py
 
 
 and modify the constants.
