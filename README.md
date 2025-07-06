@@ -14,9 +14,9 @@
    - Generates summaries for the clusters
 
 3. **RAG Pipeline**
-- At a first step, we query the cluster summaries.
-- Then we query those chunks which belonged to the cluster returned in the previous step as well as the tables.
-- This information is formated together for the augmented generation.
+   - At a first step, we query the cluster summaries.
+   - Then we query those chunks which belonged to the cluster returned in the previous step as well as the tables.
+   - This information is formated together for the augmented generation.
 
 ## Current Configuration
 
