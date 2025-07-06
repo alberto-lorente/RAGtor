@@ -23,13 +23,13 @@
 Models:
    - SUMMARY_OLLAMA_MODEL        =       "llama3.2:1b"
    - VLM_OLLAMA_MODEL            =       "llava-phi3:latest"  
-   - RETRIEVAL_OLLAMA_MODEL          =       "llama3.2:1b"
+   - RETRIEVAL_OLLAMA_MODEL      =       "llama3.2:1b"
    - EMBEDDINGS_MODEL            =       "Snowflake/snowflake-arctic-embed-s"
 
 
 ### Requirements
 
-In order for the app to run you should have Ollama installed.
+In order for the app to run you should have Ollama installed and the NLTK packages punkt and stopwords downloaded.
 
 ### Installation:
 Navigate to the repository directory and
