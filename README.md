@@ -1,45 +1,7 @@
 ## Repository Overview
 
-RAGtor/
-│
-├── data/
-│   ├── db/
-│   ├── pdf_to_images/ 
-│   ├── pdfs/
-│   └── prompts/
-│       ├── example_markdown.md
-│       ├── example_md_to_text.txt
-│       ├── example_table_image.png
-│       ├── example.pdf
-│       └── loaded_pdfs_id.json
-│
-├── Literature/
-├── poppler-24.08.0/
-│
-├── ragtor/
-│   ├── __init__.py
-│   ├── reusable.py
-│   ├── app.py
-│   ├── chunk_class.py
-│   ├── clustering_tutils.py
-│   ├── config.py
-│   ├── doc_class.py
-│   ├── encoding_tutils.py
-│   ├── experiments.ipynb
-│   ├── generation.py
-│   ├── rag.py
-│   └── to do's.txt
-│
-├── RAGtor.egg-info/
-│
-├── .gitignore
-├── additional-requirements.txt
-├── checking_vector_db_things.ipynb
-├── OVERVIEW QUERY.png
-├── processing and loading workflow.ipynb
-├── pyproject.toml
-├── querying workflow.ipynb
-└── README.md
+<pre><code>RAGtor/ │ ├── data/ │ ├── db/ │ ├── pdf_to_images/ │ ├── pdfs/ │ └── prompts/ │ ├── example_markdown.md │ ├── example_md_to_text.txt │ ├── example_table_image.png │ ├── example.pdf │ └── loaded_pdfs_id.json │ ├── Literature/ ├── poppler-24.08.0/ │ ├── ragtor/ │ ├── __init__.py │ ├── reusable.py │ ├── app.py │ ├── chunk_class.py │ ├── clustering_tutils.py │ ├── config.py │ ├── doc_class.py │ ├── encoding_tutils.py │ ├── experiments.ipynb │ ├── generation.py │ ├── rag.py │ └── to do's.txt │ ├── RAGtor.egg-info/ │ ├── .gitignore ├── additional-requirements.txt ├── checking_vector_db_things.ipynb ├── OVERVIEW QUERY.png ├── processing and loading workflow.ipynb ├── pyproject.toml ├── querying workflow.ipynb └── README.md </code></pre>
+
 
 - The data folder contains the default path for the vector db, the default path where the app will look for new pdfs as well as the default prompts for querying.
 - Within the Liretature folder you will find the RAPTOR paper which this repo is based on.
