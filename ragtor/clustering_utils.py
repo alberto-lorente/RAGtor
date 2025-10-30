@@ -92,6 +92,11 @@ def process_doc_clusters(doc:               Doc,
                         summary_model:      str=SUMMARY_OLLAMA_MODEL,
                         summary_prompt:     str=PROMPTS["summary_prompt"]) -> Doc:
 
+    """
+    Processes the document to create optimal clusters of sentences based on their embeddings.
+    Then each cluster is summarized.
+    """
+
     # max_n_clusters  = doc.n_sents / 5
     if max_n_clusters < min_n_clusters or doc.n_sents < min_n_clusters or doc.n_sents < max_n_clusters:
         # print("Number of sentences", doc.n_sents)

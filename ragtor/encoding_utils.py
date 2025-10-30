@@ -27,6 +27,10 @@ def encode_image_to_bytes(image): ############## ADD THE TYPE
 
 def compute_embeddings( text:       str, 
                         embeddings_model:      str = EMBEDDINGS_MODEL) -> torch.Tensor:
+    
+    """
+    Compute text embeddings using SentenceTransformers.
+    """
 
     model = SentenceTransformer(embeddings_model)
     embeddings = model.encode(text)
@@ -55,7 +59,7 @@ def compute_token_length(   text:       str,
 def compute_sent_length(text: str) -> Tuple:
     
     sentences = nltk.sent_tokenize(text) # could compare how fast spacy/nlt/other options are
-    length = len(tokens)
+    length = len(sentences)
             
     return length, sentences
 

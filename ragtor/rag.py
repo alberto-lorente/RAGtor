@@ -17,8 +17,8 @@ from .config import EMBEDDINGS_MODEL, VECTOR_DB_PATH, PDFS_LOADED_ID_FILE_PATH
 # docs for faiss indexes https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html
 
 def set_up_RAG_index(embedding_model_id: str = EMBEDDINGS_MODEL,
-                     vector_db_path: str = VECTOR_DB_PATH,
-                     pdfs_loaded_ids_path: str = PDFS_LOADED_ID_FILE_PATH) -> Tuple:
+                    vector_db_path: str = VECTOR_DB_PATH,
+                    pdfs_loaded_ids_path: str = PDFS_LOADED_ID_FILE_PATH) -> Tuple:
     
     """
     Sets up a Faiss RAG index based on the dimensions of the embedding model.
@@ -55,6 +55,11 @@ def set_up_RAG_index(embedding_model_id: str = EMBEDDINGS_MODEL,
 
 def check_if_db_exists(vector_db_path: str = VECTOR_DB_PATH) -> bool | List[str]:
     
+    """
+    Checks if the path for the vector db exists. Then checks if there is a db in the path.
+    If there is, it returns the paths of the db files. If not, it creates the folder and returns False.
+    """
+    
     if os.path.exists(vector_db_path):
         print("DB folder path exists")
         exists = os.listdir(vector_db_path)
@@ -70,7 +75,12 @@ def check_if_db_exists(vector_db_path: str = VECTOR_DB_PATH) -> bool | List[str]
         return False
     
 def load_vector_db(vector_db_path:      str = VECTOR_DB_PATH,
-                   embeddings_model_id: str = EMBEDDINGS_MODEL):
+                embeddings_model_id: str = EMBEDDINGS_MODEL):
+    
+    """
+    Loads the vector db from the path.
+    Returns the vector store.
+    """
     
     embeddings = HuggingFaceEmbeddings(model_name=embeddings_model_id)
 
@@ -79,12 +89,15 @@ def load_vector_db(vector_db_path:      str = VECTOR_DB_PATH,
     return vector_store
 
 def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
-                  embeddings_model_id: str = EMBEDDINGS_MODEL,
-                  pdfs_loaded_ids_path: str = PDFS_LOADED_ID_FILE_PATH):
+                embeddings_model_id: str = EMBEDDINGS_MODEL,
+                pdfs_loaded_ids_path: str = PDFS_LOADED_ID_FILE_PATH):
     
-    """Checks if the Vector DB exists. 
-    If it does, it loads it with the ollama embedder set in the enviroment variables. 
-    If it doesn't, it creates it and laods it. """
+    """
+    Checks if the Vector DB exists. 
+    If it does, it loads it with the ollama embedder set in the environment variables. 
+    If it doesn't, it creates it and loads it.
+    Returns the vector store object.
+    """
 
     db_exists = check_if_db_exists(vector_db_path=vector_db_path)
     if db_exists:
@@ -94,8 +107,8 @@ def set_up_rag_db(vector_db_path: str = VECTOR_DB_PATH,
         return vector_store
     else:
         set_up_RAG_index(embedding_model_id=embeddings_model_id,
-                         vector_db_path=vector_db_path,
-                         pdfs_loaded_ids_path=pdfs_loaded_ids_path)
+                        vector_db_path=vector_db_path,
+                        pdfs_loaded_ids_path=pdfs_loaded_ids_path)
         vector_store = load_vector_db(vector_db_path=vector_db_path)
         print("Vector Db set up")
         print("Loading vector store")
@@ -105,6 +118,11 @@ def raptor_search(vector_store:        FAISS,
                     query:              str, 
                     embeddings_model:    str = EMBEDDINGS_MODEL, 
                     k:                  int = 3) -> List[Document] | List:
+
+    """
+    Helper function to perform RAPTOR search: 
+    first it finds the most relevant single cluster summary, then it uses the metadata of that cluster to filter the search for the most relevant chunks within that cluster.
+    """
 
     filter_args = {}
     filter_args["chunk_type"] = "cluster_summary"
@@ -138,8 +156,11 @@ def default_search(vector_store:        FAISS,
                     chunk_type:         str | bool = "sent", 
                     chunk_source:       str | bool = False)  -> List[Document]:
     
+    """
+    Helper function to perform default similarity search optionally filtering by chunk type and source.
+    """
+    
     filter_args = {}
-           
     if chunk_type:
         filter_args["chunk_type"] = chunk_type
     if chunk_source:
@@ -159,7 +180,12 @@ def query_vector_store(vector_store:        FAISS,
                         chunk_type:         str | bool = "sent", 
                         chunk_source:       str | bool = False,
                         mode:               str = "default") -> List[Document]:
-           
+    
+    """
+    Main function to query the vector store. Brings together the search helper functions and routes them based on the mode ("default", "raptor", "ensemble") selected.
+    
+    """
+
     if mode == "default":
         results = default_search(vector_store,
                                 query,

@@ -8,6 +8,10 @@ from .config import SUMMARY_OLLAMA_MODEL, QUERY_OLLAMA_MODEL, VLM_OLLAMA_MODEL
 
 def ollama_generate_text(model: str, 
                         formatted_prompt: str) -> Tuple[str, List[Dict]]: # the response and the list of chat messages
+    
+    """
+    Helper function to generate using Ollama models.
+    """
 
     if model == SUMMARY_OLLAMA_MODEL:
         messages = [
@@ -54,6 +58,10 @@ def ollama_generate_text(model: str,
 
 
 def format_context_string(responses: List[Document]) -> str:
+    
+    """
+    Helper function to format a context string from retrieved documents.
+    """
 
     key_points_str = ""
     for i, response in enumerate(responses):

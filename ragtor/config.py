@@ -36,3 +36,5 @@ EXAMPLE_IMAGE_FILE          =       data_path / "example_table_image.png"
 
 with open(PROMPTS_PATH, "r") as f:
     PROMPTS = json.load(f)
+    
+# NOTE: CURRENT CONFIGURATION IS RATHER SLOW
