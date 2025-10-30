@@ -37,6 +37,8 @@ RAGtor/
 
 ## Current Configuration
 
+The current configuration is rather slow.
+
 Models:
    - SUMMARY_OLLAMA_MODEL        =       "llama3.2:1b"
    - VLM_OLLAMA_MODEL            =       "llava-phi3:latest"  
